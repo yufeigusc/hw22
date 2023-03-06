@@ -15,22 +15,19 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class MyCrawlerController {
 
     public static CrawlStat resultStat;
 
-    public static int numThread = 64;
+    public static int numThread = 64    ;
     public static int pageToFetch = 20000;    // 20000
 
     public static int delay = 1000;
 
-    public static void main(String[] args) throws Exception {
+    public static void main_next(String[] args) throws Exception {
         CrawlConfig config = new CrawlConfig();
 
         config.setCrawlStorageFolder("results");
@@ -87,7 +84,7 @@ public class MyCrawlerController {
 
         dumpData();
         getStat();
-        JsonUtil.dumpCrawlStatToJson(resultStat, "CrawlStat_latimes.json");
+//        JsonUtil.dumpCrawlStatToJson(resultStat, "CrawlStat_latimes.json");
 
     }
 
@@ -199,7 +196,7 @@ public class MyCrawlerController {
         }
 
         StringBuilder content_sb = new StringBuilder();
-        statusCodes.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(
+        contentTypes.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).forEach(
                 entry -> content_sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n")
         );
 
@@ -223,7 +220,7 @@ public class MyCrawlerController {
         writer.write(
                 "Outgoing URLs:\n" +
                 "==============\n" +
-                "Total URLs extracted:\n" + numDiscoveredUrls + "\n" +
+                "Total URLs extracted: " + numDiscoveredUrls + "\n" +
                 "# unique URLs extracted: " + numUniqueUrls + "\n" +
                 "# unique URLs within News Site: " + numUniqueUrlsWithinResidence + "\n" +
                 "# unique URLs outside News Site: " + numUniqueUrlsOutsideResidence + "\n" +
@@ -253,6 +250,10 @@ public class MyCrawlerController {
         );
         writer.close();
 
+    }
+
+    public static void setCrawlStat(CrawlStat crawlStat){
+        resultStat = crawlStat;
     }
 
 }// Main
